@@ -26,10 +26,13 @@ CREATE TABLE IF NOT EXISTS `post` (
 );
 
 CREATE TABLE IF NOT EXISTS `UserVotePostLink` (
+
 	userName varchar(255) NOT NULL,
     postId INT NOT NULL,
     FOREIGN KEY (userName) REFERENCES `user` (userName) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (postId) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (postId) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    
+	primary key (userName, postId)
 );
 
 CREATE TABLE IF NOT EXISTS `image` (
@@ -41,15 +44,13 @@ CREATE TABLE IF NOT EXISTS `postContainsImageLink` (
 	postId INT AUTO_INCREMENT NOT NULL,
     FOREIGN KEY (`url`) REFERENCES `image` (url) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`postId`) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    primary key (url, postId)
+	primary key (url, postId)
 );
-
 
 CREATE TABLE IF NOT EXISTS `awardType` (
 	`name` VARCHAR(200) PRIMARY KEY,
     weight INT NOT NULL 
 );
-
 
 CREATE TABLE IF NOT EXISTS `award` (
 	id INT PRIMARY KEY AUTO_INCREMENT,
@@ -78,10 +79,9 @@ CREATE TABLE IF NOT EXISTS `awardToPostLink` (
     postId INT NOT NULL,
     awardId INT NOT NULL,
     FOREIGN KEY (`postId`) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`awardId`) REFERENCES `award` (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`awardId`) REFERENCES `award` (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    primary key (postId, awardId)
 );
-
-
 
 
 
