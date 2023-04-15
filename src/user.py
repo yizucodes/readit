@@ -1,6 +1,12 @@
 import pymysql
+import re
 import json
 import bcrypt
+
+
+def is_valid_email(email):
+    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return bool(re.match(email_regex, email))
 
 # Load configuration from JSON file
 def load_config():
@@ -46,7 +52,12 @@ def get_user_details():
         first_name = input("First Name: ").strip()
         last_name = input("Last Name: ").strip()
         password = input("Password: ").strip()
+      
         email = input("Email: ").strip()
+        while (is_valid_email(email) == False):
+            print("Invalid email address. Please try again.")
+            email = input("Email: ").strip()
+
         date_of_birth = input("Date of Birth (YYYY-MM-DD): ").strip()
         about = input("About: ").strip()
         
@@ -57,8 +68,6 @@ def get_user_details():
 
         except Exception as e:
             print(f"Error creating user: {e}")
-
-# TODO: email validation
 
 if __name__ == "__main__":
     get_user_details()
