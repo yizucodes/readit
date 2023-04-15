@@ -1,0 +1,8 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "Change according to your MySQL credentials",
+        "password": "Change according to your MySQL credentials",
+        "database_name": "readit"
+    }
+}
