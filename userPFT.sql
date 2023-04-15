@@ -38,20 +38,5 @@ END //
 
 DELIMITER ;
 
--- Call createUser(
--- "Chirag_Mal",
--- "Chirag",
--- "Malhotra",
--- "This",
--- "emil@email.com",
--- Null,
--- Null);
 
-Call createUser(
-"yi",
-"yI",
-null,
-"This",
-"emil2@email.com",
-Null,
-Null);
+
