@@ -54,7 +54,8 @@ def create_user_input(username, first_name, last_name, password, email, date_of_
     finally:
         connection.close()
 
-def get_user_details():
+
+def create_user():
     while True:
         print("Creating an account")
         username = input("Username: ").strip()
@@ -71,7 +72,8 @@ def get_user_details():
         about = input("About: ").strip()
         
         try:
-            create_user(username, first_name, last_name, password, email, date_of_birth, about)
+            create_user(username, first_name, last_name,
+                        password, email, date_of_birth, about)
             print("User created successfully!")
             break
 
