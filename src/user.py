@@ -8,6 +8,13 @@ def is_valid_email(email):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     return bool(re.match(email_regex, email))
 
+
+def get_column_index(cursor, colName):
+    for index, column_info in enumerate(cursor.description):
+        if column_info[0].lower() == colName.lower():
+            return index
+    return -1
+
 # Load configuration from JSON file
 def load_config():
     with open("config.json", "r") as file:
