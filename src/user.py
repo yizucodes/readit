@@ -3,6 +3,7 @@ import re
 import json
 import bcrypt
 
+# TODO: Validate date in YYYY-MM-DD
 
 def is_valid_email(email):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -95,8 +96,6 @@ def get_user():
         username_Input = username = input("Enter username that you want to read info about (type 'exit' to quit): ")
 
         try:
-           
-
             if username_Input.lower() == 'exit':
                 break
             
@@ -132,6 +131,89 @@ def get_user():
             cur.close()
             connection.close()
 
+# kwargs is short for "keyword arguments."
+# Pass a variable number of named or keyword arguments to a function
+def update_user(username, **kwargs):
+    connection = create_connection()
+    
+    new_username = kwargs.get('new_username', None)
+    new_first_name = kwargs.get('new_first_name', None)
+    new_last_name = kwargs.get('new_last_name', None)
+    new_password = kwargs.get('new_password', None)
+    new_email = kwargs.get('new_email', None)
+    new_date_of_birth = kwargs.get('new_date_of_birth', None)
+    new_about = kwargs.get('new_about', None)
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.callproc('updateUser', (username, new_username, new_first_name, new_last_name,
+                                           new_password, new_email, new_date_of_birth, new_about))
+            connection.commit()
+            print("User updated successfully.")
+    except pymysql.err.InternalError as e:
+        print("Error:", e)
+    finally:
+        connection.close()
+
+def update_user_interactive():
+
+    # TODO: Get the current username that is logged in VIA GLOBAL VARIABLE
+    username = input("Enter your current username: ").strip()
+    
+    update_fields = {}
+    update_another_field = True
+    
+    while update_another_field:
+        print("Which field do you want to update?")
+        print("1. Username")
+        print("2. First Name")
+        print("3. Last Name")
+        print("4. Password")
+        print("5. Email")
+        print("6. Date of Birth")
+        print("7. About")
+        
+        choice = int(input("Enter the number corresponding to the field you want to update: "))
+        
+        if choice == 1:
+            new_username = input("Enter new username: ").strip()
+            update_fields['new_username'] = new_username
+        elif choice == 2:
+            new_first_name = input("Enter new first name: ").strip()
+            update_fields['new_first_name'] = new_first_name
+        elif choice == 3:
+            new_last_name = input("Enter new last name: ").strip()
+            update_fields['new_last_name'] = new_last_name
+        elif choice == 4:
+            new_password = input("Enter new password: ").strip()
+            # Hash the new password
+            new_password_bytes = new_password.encode('utf-8')
+            salt = bcrypt.gensalt()
+            hashed_new_password = bcrypt.hashpw(new_password_bytes, salt)
+
+            update_fields['new_password'] = hashed_new_password
+
+        elif choice == 5:
+            new_email = input("Enter new email: ").strip()
+            while not is_valid_email(new_email):
+                print("Invalid email address. Please try again.")
+                new_email = input("Enter new email: ").strip()
+            update_fields['new_email'] = new_email
+        elif choice == 6:
+            new_date_of_birth = input("Enter new date of birth (YYYY-MM-DD): ").strip()
+            update_fields['new_date_of_birth'] = new_date_of_birth
+        elif choice == 7:
+            new_about = input("Enter new about: ").strip()
+            update_fields['new_about'] = new_about
+        else:
+            print("Invalid choice. Please try again.")
+            continue
+        
+        should_continue = input("Do you want to update another field? (yes/no): ").strip().lower()
+        update_another_field = should_continue == "yes"
+    
+    update_user(username, **update_fields)
 
 if __name__ == "__main__":
-    get_user()
+    # Call the update_user_interactive function to start the update process
+    update_user_interactive()
