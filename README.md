@@ -1,6 +1,6 @@
 # readit
-CS5200 Final Project
 
+CS5200 Final Project
 
 # How To Run
 
@@ -12,36 +12,39 @@ CS5200 Final Project
 
 ```
 
-
 # TODO
 
 - Hashing and storing password
 
 - CRUD User
-    - Create
-        - Search for solution
-    - Read profile page
-        - Function to return one profile based on userName
-    - Update any fields of user
-        - Procedure or function
-    - Delete user --> user can delete itself
-        - Procedure
+
+  - Create
+    - Search for solution
+  - Read profile page
+    - Function to return one profile based on userName
+  - Update any fields of user
+    - Procedure or function
+  - Delete user --> user can delete itself
+    - Procedure
 
 - CRUD Post
-     - Create Post
-     - Read post
-     - Update IS ONLY increasing or decreasing Vote
-     - Delete post will delete its comments
+
+  - Create Post --x
+  - Read post
+  - Update post --X
+  - Update IS ONLY increasing or decreasing Vote --X
+  - Delete post will delete its comments
 
 - CRUD Comment
-    - Create comment and subcomment
-    - Read one comment
-    - Update one comment
-    - Delete
-        - Delete the top-level comment, child comments get deleted
-        - Deleting sub-comment, only sub-comment gets deleted 
+  - Create comment and subcomment
+  - Read one comment
+  - Update one comment
+  - Delete
+    - Delete the top-level comment, child comments get deleted
+    - Deleting sub-comment, only sub-comment gets deleted
 
 # Maybe - TBD
+
 - Award
-    - Trigger to increase or decrease numAwardsReceived based posts
-    - When post gets awarded by user
+  - Trigger to increase or decrease numAwardsReceived based posts
+  - When post gets awarded by user
