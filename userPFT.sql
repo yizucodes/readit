@@ -47,3 +47,62 @@ BEGIN
  FROM `user`
  WHERE `user`.userName = usernameInput;
 END //
+
+DROP PROCEDURE IF EXISTS updateUser;
+
+DELIMITER //
+
+CREATE PROCEDURE updateUser (
+    IN p_userName VARCHAR(255),
+    IN p_newUserName VARCHAR(255),
+    IN p_newFirstName VARCHAR(255),
+    IN p_newLastName VARCHAR(255),
+    IN p_newPassword VARCHAR(255),
+    IN p_newEmail VARCHAR(255),
+    IN p_newDateOfBirth DATE,
+    IN p_newAbout VARCHAR(1000)
+)
+BEGIN
+    DECLARE username_exists INT DEFAULT 0;
+    DECLARE email_exists INT DEFAULT 0;
+    DECLARE errorMessage VARCHAR(255);
+
+    IF p_newUserName IS NOT NULL THEN
+        SELECT COUNT(*) INTO username_exists
+        FROM `user`
+        WHERE userName = p_newUserName;
+
+        IF username_exists > 0 THEN
+            SET errorMessage = 'The new username is already taken.';
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMessage;
+        END IF;
+    END IF;
+
+    IF p_newEmail IS NOT NULL THEN
+        SELECT COUNT(*) INTO email_exists
+        FROM `user`
+        WHERE email = p_newEmail;
+
+        IF email_exists > 0 THEN
+            SET errorMessage = 'The new email is already taken.';
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMessage;
+        END IF;
+    END IF;
+
+    UPDATE `user`
+    SET
+        userName = IF(p_newUserName IS NULL, userName, p_newUserName),
+        firstName = IF(p_newFirstName IS NULL, firstName, p_newFirstName),
+        lastName = IF(p_newLastName IS NULL, lastName, p_newLastName),
+        `password` = IF(p_newPassword IS NULL, `password`, p_newPassword),
+        email = IF(p_newEmail IS NULL, email, p_newEmail),
+        dateOfBirth = IF(p_newDateOfBirth IS NULL, dateOfBirth, p_newDateOfBirth),
+        about = IF(p_newAbout IS NULL, about, p_newAbout)
+    WHERE
+        userName = p_userName;
+
+    SET errorMessage = 'User updated successfully.';
+    SELECT errorMessage AS Message; -- Display the message as a result set to see message as an output
+END //
+
+DELIMITER ;
