@@ -2,7 +2,8 @@ import pymysql
 import re
 import json
 import bcrypt
-# from src.utils import is_valid_date
+
+# TODO: Get the current username that is logged in VIA GLOBAL VARIABLE
 from datetime import datetime
 
 # Utils
@@ -25,7 +26,6 @@ def get_column_index(cursor, colName):
     return -1
 
 # Load configuration from JSON file
-
 
 def load_config():
     with open("config.json", "r") as file:
@@ -225,6 +225,31 @@ def update_user_interactive():
     
     update_user(username, **update_fields)
 
+
+def delete_user_interactive():
+    while True:
+        username = input("Enter username of user to delete (type 'exit' to quit): ")
+        if username.lower() == 'exit':
+            break
+        
+        confirmation = input(f"Are you sure you want to delete user {username}? (yes/no): ")
+        if confirmation.lower() == 'yes':
+            connection = create_connection()
+            try:
+                with connection.cursor() as cursor:
+                    cursor.callproc('delete_user', [username])
+                    connection.commit()
+                    print("User deleted successfully.")
+            except:
+                print("Error in deletion")
+            finally:
+                connection.close()
+        else:
+            print("User deletion canceled.")
+
+
 if __name__ == "__main__":
     # Call the update_user_interactive function to start the update process
-    update_user_interactive()
+    # update_user_interactive()
+    delete_user_interactive()
+    

@@ -106,3 +106,29 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+
+DROP PROCEDURE IF EXISTS delete_user;
+
+DELIMITER //
+CREATE PROCEDURE delete_user(
+    IN userName VARCHAR(255)
+)
+BEGIN
+    DECLARE userToBeDeleted VARCHAR(255);
+
+	DECLARE errorMessage VARCHAR(255);
+    SELECT `user`.userName INTO userToBeDeleted FROM `user` WHERE `user`.userName = userName;
+    IF userToBeDeleted != userName THEN 
+		SET errorMessage = 'Not authorized to delete this user.';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMessage;
+    ELSE 
+		DELETE FROM `user` WHERE `user`.userName = userName;
+	END IF;	
+END //
+DELIMITER ;
+
+SELECT * FROM user;
+CALL delete_user("NONEXIST")
