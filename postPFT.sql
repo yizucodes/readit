@@ -41,6 +41,10 @@ BEGIN
 			ELSE
 				SELECT title INTO current_title;
 			END IF;
+            
+            IF (SELECT userName FROM post WHERE post.userName = username) IS NULL
+				THEN SIGNAL sqlstate '45000' SET message_text = "You can only edit your own post!";
+			END IF;	
             SELECT NOW() INTO current_t;
 			UPDATE post
             
@@ -52,6 +56,22 @@ BEGIN
 	END IF;
 END // 
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS user_votes_post;
+
+DELIMITER // 
+CREATE PROCEDURE user_votes_post(
+userName VARCHAR(255),
+postId INT
+)
+BEGIN
+	INSERT INTO uservotepostlink (userName, postId)
+		VALUES (userName, postId);
+END //
+DELIMITER ;
+
+CALL user_votes_post("bobsmith",12);
+
 
 -- CALL CUPost(
 -- null,
@@ -78,6 +98,20 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS delete_post;
 
+DELIMITER //
+CREATE PROCEDURE delete_post(
+postId int,
+userName varchar(255)
+)
+BEGIN
+	DECLARE user_post VARCHAR(255);
+    SELECT post.userName INTO user_post FROM post WHERE post.id = postId;
+    IF user_post != userName THEN SIGNAL sqlstate '45000' SET message_text = "Not authorized to delete this post.";
+    END IF;	
+	DELETE FROM post WHERE post.id = postId AND post.userName = userName;
+END //
+DELIMITER ;
 
 
