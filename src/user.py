@@ -2,8 +2,16 @@ import pymysql
 import re
 import json
 import bcrypt
+# from src.utils import is_valid_date
+from datetime import datetime
 
-# TODO: Validate date in YYYY-MM-DD
+# Utils
+def is_valid_date(date_string, date_format="%Y-%m-%d"):
+    try:
+        datetime.strptime(date_string, date_format)
+        return True
+    except ValueError:
+        return False
 
 def is_valid_email(email):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -201,6 +209,9 @@ def update_user_interactive():
             update_fields['new_email'] = new_email
         elif choice == 6:
             new_date_of_birth = input("Enter new date of birth (YYYY-MM-DD): ").strip()
+            while not is_valid_date(new_date_of_birth):
+                 print("Invalid date format. Please try again in YYYY-MM-DD format.")
+                 new_date_of_birth = input("Enter new date of birth (YYYY-MM-DD): ").strip()
             update_fields['new_date_of_birth'] = new_date_of_birth
         elif choice == 7:
             new_about = input("Enter new about: ").strip()
