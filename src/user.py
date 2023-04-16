@@ -16,9 +16,12 @@ def get_column_index(cursor, colName):
     return -1
 
 # Load configuration from JSON file
+
+
 def load_config():
     with open("config.json", "r") as file:
         return json.load(file)
+
 
 config = load_config()
 
@@ -62,7 +65,7 @@ def create_user():
         first_name = input("First Name: ").strip()
         last_name = input("Last Name: ").strip()
         password = input("Password: ").strip()
-      
+
         email = input("Email: ").strip()
         while (is_valid_email(email) == False):
             print("Invalid email address. Please try again.")
@@ -70,7 +73,7 @@ def create_user():
 
         date_of_birth = input("Date of Birth (YYYY-MM-DD): ").strip()
         about = input("About: ").strip()
-        
+
         try:
             create_user(username, first_name, last_name,
                         password, email, date_of_birth, about)
@@ -80,9 +83,55 @@ def create_user():
         except Exception as e:
             print(f"Error creating user: {e}")
 
+
+def get_user():
+    # Connect to the MySQL database
+    connection = create_connection()
+    cur = connection.cursor()
+
+    while True:
+
+        # Current implementation requires currently logged in user to input his user name to read his details
+        username_Input = username = input("Enter username that you want to read info about (type 'exit' to quit): ")
+
+        try:
+           
+
+            if username_Input.lower() == 'exit':
+                break
+            
+             # Call the stored procedure to retrieve user details
+            cur.callproc('getUserDetails', [username_Input])
+
+            # Get the result set from the stored procedure
+            resUser = cur.fetchone()
+
+            # Print the user details
+            username = resUser[get_column_index(cur, "username")]
+            first_name = username = resUser[get_column_index(cur, "firstName")]
+            last_name = resUser[get_column_index(cur, "lastName")]
+            email = resUser[get_column_index(cur, "email")]
+            date_of_birth = resUser[get_column_index(cur, "dateOfBirth")]
+            about = resUser[get_column_index(cur, "about")]
+            num_posts = resUser[get_column_index(cur, "numPosts")]
+            time_joined = resUser[get_column_index(cur, "timeJoined")]
+
+            print("Username:", username)
+            print("First Name:", first_name)
+            print("Last Name:", last_name)
+            print("Email:", email)
+            print("Date of Birth:", date_of_birth)
+            print("About:", about)
+            print("Number of Posts:", num_posts)
+            print("Time Joined:", time_joined)
+
+        except Exception as e:
+            print(f"Error retrieving user: {e}")
+
+        finally:
+            cur.close()
+            connection.close()
+
+
 if __name__ == "__main__":
-    get_user_details()
-
-
-# Example usage
-# create_user("pw", "pw", "pw", "pw", "john.doe@example.com", "1995-01-01", "I'm pw")
+    get_user()
