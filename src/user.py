@@ -31,7 +31,8 @@ def create_connection():
         database=config["database"]["database_name"]
     )
 
-def create_user(username, first_name, last_name, password, email, date_of_birth, about):
+
+def create_user_input(username, first_name, last_name, password, email, date_of_birth, about):
     # Hash the password
     password_bytes = password.encode('utf-8')
     salt = bcrypt.gensalt()
@@ -43,8 +44,9 @@ def create_user(username, first_name, last_name, password, email, date_of_birth,
     try:
         with connection.cursor() as cursor:
             # Execute the stored procedure with the hashed password
-            cursor.callproc('createUser', (username, first_name, last_name, hashed_password, email, date_of_birth, about))
-        
+            cursor.callproc('createUser', (username, first_name,
+                            last_name, hashed_password, email, date_of_birth, about))
+
         # Commit the transaction so that user created by the createUser stored procedure is saved to the database permanently.
         connection.commit()
     except pymysql.err.InternalError as e:
