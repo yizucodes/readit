@@ -1,4 +1,4 @@
-USE READIT;
+USE readit;
 
 DROP PROCEDURE IF EXISTS createUser;
 
@@ -39,4 +39,11 @@ END //
 DELIMITER ;
 
 
-
+DROP PROCEDURE IF EXISTS getUserDetails;
+DELIMITER //
+CREATE PROCEDURE getUserDetails(usernameInput VARCHAR(255))
+BEGIN
+ SELECT userName, firstName, lastName, email, dateOfBirth, about, numPosts, timeJoined
+ FROM `user`
+ WHERE `user`.userName = usernameInput;
+END //
