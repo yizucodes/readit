@@ -71,13 +71,13 @@ CREATE TABLE IF NOT EXISTS `comment` (
     CONSTRAINT postCommentUnique UNIQUE (postId, id)
 );
 
--- CREATE TABLE IF NOT EXISTS `postHasCommentLink` ( 
--- 	commentId INT NOT NULL,
---     postId INT NOT NULL,
---     FOREIGN KEY (`postId`) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
---     FOREIGN KEY (`commentId`) REFERENCES `comment` (id) ON DELETE CASCADE ON UPDATE CASCADE,
---     primary key (commentId, postId)
--- );
+CREATE TABLE IF NOT EXISTS `postHasCommentLink` ( 
+	commentId INT NOT NULL,
+    postId INT NOT NULL,
+    FOREIGN KEY (`postId`) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`commentId`) REFERENCES `comment` (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    primary key (commentId, postId)
+);
 
 CREATE TABLE IF NOT EXISTS `awardToPostLink` (	
     postId INT NOT NULL,
