@@ -56,7 +56,6 @@ DELIMITER ;
 
 USE readit;
 
--- Drop the procedure if it already exists
 DROP PROCEDURE IF EXISTS updateComment;
 
 DELIMITER //
@@ -76,6 +75,99 @@ BEGIN
     ELSE
         -- Update the textBody of the comment
         UPDATE comment SET textBody = new_text_body WHERE id = comment_id;
+    END IF;
+END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS deleteComment;
+
+DELIMITER //
+CREATE PROCEDURE deleteComment
+(
+    IN comment_id INT
+)
+BEGIN
+    -- Check if the comment exists
+    DECLARE comment_exists INT;
+    SELECT COUNT(*) INTO comment_exists FROM comment WHERE id = comment_id;
+
+    IF comment_exists = 0 THEN
+        -- Signal an error if the comment doesn't exist
+        SIGNAL SQLSTATE '45000' SET message_text = 'Comment does not exist with that ID.';
+    ELSE
+        -- Delete the comment from the postHasCommentLink table
+        DELETE FROM postHasCommentLink WHERE commentId = comment_id;
+
+        -- Delete the comment
+        DELETE FROM comment WHERE id = comment_id;
+    END IF;
+END //
+DELIMITER ;
+
+CALL deleteComment(16);
+
+
+-- Testing 
+
+SELECT
+    p.id AS post_id,
+    p.title AS post_title,
+    p.body AS post_body,
+    c.id AS comment_id,
+    c.textBody AS comment_body,
+    c.parentId AS comment_parent_id
+FROM
+    post AS p
+JOIN
+    postHasCommentLink AS pcl
+ON
+    p.id = pcl.postId
+JOIN
+    comment AS c
+ON
+    pcl.commentId = c.id;
+    
+
+
+
+-- Drop the procedure if it already exists
+DROP PROCEDURE IF EXISTS readComment;
+
+DELIMITER //
+CREATE PROCEDURE readComment
+(
+    IN comment_id INT
+)
+BEGIN
+    -- Check if the comment exists
+    DECLARE comment_exists INT;
+    SELECT COUNT(*) INTO comment_exists FROM comment WHERE id = comment_id;
+
+    IF comment_exists = 0 THEN
+        -- Signal an error if the comment doesn't exist
+        SIGNAL SQLSTATE '45000' SET message_text = 'Comment does not exist with that ID.';
+    ELSE
+        -- Fetch the comment along with the associated post information
+        SELECT
+            c.id AS comment_id,
+            c.textBody AS comment_text_body,
+            c.parentId AS comment_parent_id,
+            p.id AS post_id,
+            p.title AS post_title,
+            p.body AS post_body
+        FROM
+            comment AS c
+        JOIN
+            postHasCommentLink AS pcl
+        ON
+            c.id = pcl.commentId
+        JOIN
+            post AS p
+        ON
+            pcl.postId = p.id
+        WHERE
+            c.id = comment_id;
     END IF;
 END //
 DELIMITER ;
