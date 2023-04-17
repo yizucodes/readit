@@ -1,6 +1,7 @@
 import pymysql
 import json
 import bcrypt
+currentUser = None
 
 # TODO for grader: Change your user and password field based on your MySQL credentials in config.json file
 def load_config():
@@ -41,6 +42,7 @@ def verify_credentials(username, password):
         is_correct_password = bcrypt.checkpw(password_to_check, hashed_password_bytes)
         # Error handling for hashed passwords 
         if user and password_index is not None and is_correct_password:
+            currentUser = username
             return True
         else:
             return False
@@ -52,6 +54,8 @@ def login():
     while True:
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
+            if userName:
+                userName = None
             break
         
         password = input("Enter your password: ")
