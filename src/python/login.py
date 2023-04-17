@@ -39,7 +39,7 @@ def verify_credentials(username, password):
         password_to_check = password.encode('utf-8') # hashed db password
         hashed_password_bytes = user[password_index].encode('utf-8')
         is_correct_password = bcrypt.checkpw(password_to_check, hashed_password_bytes)
-
+        # Error handling for hashed passwords 
         if user and password_index is not None and is_correct_password:
             return True
         else:
