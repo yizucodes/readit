@@ -1,13 +1,9 @@
-
-import pymysql as msc
+import utils
+import login
 
 from image import image
 
-
-mydb = msc.connect(host = "LocalHost", 
-                   user=f"root", 
-                   passwd = f"University@1",
-                   db = "readit")
+mydb = utils.create_connection()
 
 cursor = mydb.cursor()
 post_id_list = []
@@ -92,6 +88,7 @@ def main():
     user = login.currentUser
 
     while(True):
+        
         inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read post in detail\n10)Exit\n"))
         if(inp == 1):
            

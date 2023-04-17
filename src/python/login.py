@@ -2,23 +2,9 @@ import pymysql
 import json
 import bcrypt
 import post
+import utils
 
 currentUser = None
-
-# TODO for grader: Change your user and password field based on your MySQL credentials in config.json file
-def load_config():
-    with open("config.json", "r") as file:
-        return json.load(file)
-
-config = load_config()
-
-def create_connection():
-    return pymysql.connect(
-        host=config["database"]["host"],
-        user=config["database"]["user"],
-        password=config["database"]["password"],
-        database=config["database"]["database_name"]
-    )
 
 
 def get_password_column_index(cursor):
@@ -28,7 +14,7 @@ def get_password_column_index(cursor):
     return None
 
 def verify_credentials(username, password):
-    conn = create_connection()
+    conn = utils.create_connection()
     cursor = conn.cursor()
     
     try:
