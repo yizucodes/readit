@@ -1,6 +1,8 @@
 import pymysql
 import json
 import bcrypt
+import post
+
 currentUser = None
 
 # TODO for grader: Change your user and password field based on your MySQL credentials in config.json file
@@ -51,7 +53,8 @@ def verify_credentials(username, password):
         conn.close()
 
 def login():
-    while True:
+    isLogged = False
+    while isLogged == False:
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
             if userName:
@@ -62,6 +65,9 @@ def login():
 
         if verify_credentials(username, password):
             print("Login successful!")
+            # Go to the main page
+            post.main()
+            isLogged = True
             break
         else:
             print("Invalid username or password. Please try again.")
