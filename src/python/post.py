@@ -54,13 +54,15 @@ img = image(cursor)
 
 
 def mainPage():
-    cursor.execute(f"select post.title, post.id, COUNT(upv.postId) as votes from uservotepostlink as upv RIGHT JOIN post ON post.id = upv.postId GROUP BY post.id;")
+    cursor.execute(f"select post.title, post.id, post.userName, COUNT(upv.postId) as votes from uservotepostlink as upv RIGHT JOIN post ON post.id = upv.postId GROUP BY post.id;")
     
     for i in cursor:
         print("--------------------------------------------------|")
         print(f"Title: {i[0]}")
         print("--------------------------------------------------|")
-        print(f"Post ID: {i[1]}................Votes: {i[2]}")
+        print(f"Author: {i[2]}")
+        print("--------------------------------------------------|")
+        print(f"Post ID: {i[1]}................Votes: {i[3]}")
         print("--------------------------------------------------|\n\n")
 
 def readPost(postId):
