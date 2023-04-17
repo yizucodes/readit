@@ -15,7 +15,7 @@ post_id_list = []
 def idList():
     cursor.execute(f"select post.id from uservotepostlink as upv RIGHT JOIN post ON post.id = upv.postId GROUP BY post.id;")
     for ids in cursor:
-        print(ids[0])
+        # print(ids[0])
         post_id_list.append(ids[0])
     
 idList()
