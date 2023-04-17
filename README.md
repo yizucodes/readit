@@ -14,17 +14,16 @@ CS5200 Final Project
 
 # TODO
 
-- Hashing and storing password
+- Hashing and storing password - DONE
 
 - CRUD User
 
-  - Create
-    - Search for solution
-  - Read profile page
+  - Create - Done
+  - Read profile page - DONE
     - Function to return one profile based on userName
-  - Update any fields of user
-    - Procedure or function
-  - Delete user --> user can delete itself
+  - Update any fields of user - Done
+    - Procedure
+  - Delete user --> user can delete itself - DONE
     - Procedure
 
 - CRUD Post
