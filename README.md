@@ -47,3 +47,8 @@ CS5200 Final Project
 - Award
   - Trigger to increase or decrease numAwardsReceived based posts
   - When post gets awarded by user
+
+# Changes
+
+After successful user creation, user is prompted back to screen asking for login
+- In activity diagram, after successful signup, user goes directly to home page with newly signed up user name
