@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS `user` (
     dateOfBirth DATE,
     about varchar(1000),
     numPosts INT DEFAULT 0,
-    numAwardsReceived INT DEFAULT 0, -- TO BE DECIDED if to do award
     timeJoined DATETIME DEFAULT CURRENT_TIMESTAMP -- done by triggers when user joins for first time
 );
 
