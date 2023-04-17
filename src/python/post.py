@@ -84,11 +84,12 @@ def readPost(postId):
         print(f"Post ID: {i[2]}................Votes: {i[3]}")
         print("--------------------------------------------------|\n\n")
 
-if __name__ == "__main__":
+
+def main():
     print("Printing overall posts: ...")
-    mainPage()
+    # mainPage()
     # user = "amandasmith"
-    user = "chrisbrown"
+    user = login.currentUser
 
     while(True):
         inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read post in detail\n10)Exit\n"))
@@ -179,3 +180,6 @@ if __name__ == "__main__":
         else:
             print("\nInvalid Option selected!\n")
 
+
+if __name__ == "__main__":
+    main()
