@@ -54,3 +54,29 @@ END //
 DELIMITER ;
 
 
+USE readit;
+
+-- Drop the procedure if it already exists
+DROP PROCEDURE IF EXISTS updateComment;
+
+DELIMITER //
+CREATE PROCEDURE updateComment
+(
+    IN comment_id INT,
+    IN new_text_body VARCHAR(1000)
+)
+BEGIN
+    -- Check if the comment exists
+    DECLARE comment_exists INT;
+    SELECT COUNT(*) INTO comment_exists FROM comment WHERE id = comment_id;
+
+    IF comment_exists = 0 THEN
+        -- Signal an error if the comment doesn't exist
+        SIGNAL SQLSTATE '45000' SET message_text = 'Comment does not exist with that ID.';
+    ELSE
+        -- Update the textBody of the comment
+        UPDATE comment SET textBody = new_text_body WHERE id = comment_id;
+    END IF;
+END //
+DELIMITER ;
+
