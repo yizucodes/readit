@@ -2,21 +2,22 @@ USE readit;
 
 
 -- The procedure is responsible for both creating a new post if it doesn't exists already or Updating it if it does.
-DROP PROCEDURE IF EXISTS CUPost;
+DROP FUNCTION IF EXISTS CUPost;
 
 DELIMITER // 
-CREATE PROCEDURE CUPost
+CREATE FUNCTION CUPost
 (id INT,
 userName varchar(255), 
 title varchar(255), 
 `body` varchar(1000)
 )
+RETURNS INT
+DETERMINISTIC
 BEGIN
-	
 	DECLARE current_t DATETIME;
     DECLARE current_title varchar(255);
     DECLARE current_body VARCHAR(1000);
-    
+    DECLARE final_id INT;
 	IF userName IS NULL THEN SIGNAL sqlstate '45000' SET message_text = "Username cannot be null";
 	end if;
 	IF id IS NULL
@@ -25,6 +26,9 @@ BEGIN
 			SELECT NOW() INTO current_t;
 			INSERT INTO post (userName, title, body, createdTime, updatedTime)
 			VALUES (userName, title, body, current_t, current_t);
+            
+            SELECT post.id INTO final_id FROM post WHERE post.userName = userName AND post.createdTime = current_t;
+            RETURN final_id;
             
 	ELSE
 			-- Update the post
@@ -42,6 +46,8 @@ BEGIN
 				SELECT title INTO current_title;
 			END IF;
             
+            SELECT id INTO final_id;
+            
             IF (SELECT userName FROM post WHERE post.userName = username) IS NULL
 				THEN SIGNAL sqlstate '45000' SET message_text = "You can only edit your own post!";
 			END IF;	
@@ -53,6 +59,8 @@ BEGIN
                 post.title = current_title,
                 post.updatedTime = current_t
 			WHERE post.id = id;
+            
+            RETURN final_id;
 	END IF;
 END // 
 DELIMITER ;
@@ -70,21 +78,7 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL user_votes_post("bobsmith",12);
-
-
--- CALL CUPost(
--- null,
--- "amandasmith",
--- "title",
--- "body");
--- CALL CUPost(
--- null,
--- "amandasmith",
--- "tit",
--- "tititit");
-
--- Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`readit`.`post`, CONSTRAINT `userCreates` FOREIGN KEY (`userName`) REFERENCES `user` (`userName`) ON DELETE CASCADE ON UPDATE CASCADE)
+-- CALL user_votes_post("bobsmith",12);
 
 
 DELIMITER //
@@ -111,7 +105,23 @@ BEGIN
     IF user_post != userName THEN SIGNAL sqlstate '45000' SET message_text = "Not authorized to delete this post.";
     END IF;	
 	DELETE FROM post WHERE post.id = postId AND post.userName = userName;
+    -- CALL undo_vote(userName, postId);
 END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS undo_vote;
+
+DELIMITER //
+CREATE PROCEDURE undo_vote(userName VARCHAR (255), id INT)
+BEGIN
+	IF (SELECT userName FROM uservotepostlink WHERE postId = id) IS NULL
+		THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "You haven't voted this post";
+	END IF;
+    
+    DELETE FROM uservotepostlink WHERE userName = uservotepostlink.userName and uservotepostlink.postId = id;
+END //
+
 DELIMITER ;
 
 
