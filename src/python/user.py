@@ -4,6 +4,7 @@ import json
 import bcrypt
 
 # TODO: Get the current username that is logged in VIA GLOBAL VARIABLE
+# Check when deleting non-existing user
 from datetime import datetime
 
 # Utils
@@ -84,7 +85,7 @@ def create_user():
         about = input("About: ").strip()
 
         try:
-            create_user(username, first_name, last_name,
+            create_user_input(username, first_name, last_name,
                         password, email, date_of_birth, about)
             print("User created successfully!")
             break
