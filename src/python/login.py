@@ -20,9 +20,13 @@ def verify_credentials(username, password):
     try:
         query = "SELECT * FROM user WHERE username = %s"
         cursor.execute(query, (username,))
+        
         user = cursor.fetchone()
+        if user == None:
+            return False
 
         password_index = get_password_column_index(cursor)
+        # print(user)
 
         # Check for hashed password
         password_to_check = password.encode('utf-8')  # hashed db password
@@ -52,6 +56,7 @@ def login():
         if choice == '1':
             username = input("Enter your username: ")
             password = input("Enter your password: ")
+            print(username, password)
 
             if verify_credentials(username, password):
                 currentUser = username

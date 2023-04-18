@@ -107,7 +107,7 @@ def main(userName):
     # print("user: ", user)
 
     while (True):
-        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read post in detail\n8)Comment a post or another comment\n9) Update a comment\n10)Exit\n"))
+        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read/Comment post(Give post ID to continue!)\n10)Exit\n"))
 
         if (inp == 1):
 
@@ -204,12 +204,23 @@ def main(userName):
         elif (inp == 7):
             post = int(input("Which post do you want to read?"))
             readPost(post)
-        elif (inp == 8):
-            post_id = int(input("Enter the post ID you want to comment on: "))
-            comment.create_comment_prompt(post_id, user)
-            readPost(post_id)
-        elif (inp == 9):
-            comment.update_comment_prompt(user)
+            
+            
+            while(True):
+                try:
+                    com_opt = int(input("\n What would you like to do next?\n1)Comment on this post\n2)Update your previous comment\n5)main page"))
+                    if (com_opt == 1):
+                        post_id = post
+                        comment.create_comment_prompt(post_id, user)
+                        readPost(post_id)
+                    elif (com_opt == 2):
+                        comment.update_comment_prompt(user)
+                    elif (com_opt == 5):
+                        break
+                except Exception as e:
+                    print(f"\nInvalid Option, {e}\n")
+                    break
+
         elif (inp == 10):
             break
         else:
