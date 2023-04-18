@@ -6,9 +6,7 @@ class image():
     
     def add_img(self, postId, img_url):
         querry = f"CALL create_img('{img_url}', {postId})"
-        print(querry)
         self.cursor.execute(querry)
-
         self.cursor.connection.commit()
 
     
