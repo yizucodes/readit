@@ -37,10 +37,10 @@ CS5200 Final Project
   - Delete post will delete its comments
 
 - CRUD Comment
-  - Create comment and subcomment
-  - Read one comment
-  - Update one comment
-  - Delete
+  - Create comment and subcomment - DONE
+  - Read thread of comment of a post  - DONE
+  - Update one comment 
+  - Delete - TO DO
     - Delete the top-level comment, child comments get deleted
     - Deleting sub-comment, only sub-comment gets deleted
 
@@ -59,7 +59,7 @@ After successful user creation, user is prompted back to screen asking for login
 # Extra Credit
 
 - Login with hashed password
-- Recursive relationship of comment
+- Recursive relationship of comment --> Overly complicated translations from user operations to database operations
 - CRUD for 3 entities
     - User
     - Post
