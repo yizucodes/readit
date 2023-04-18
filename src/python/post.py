@@ -107,7 +107,7 @@ def main(userName):
     # print("user: ", user)
 
     while (True):
-        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read post in detail\n8)Comment a post\n10)Exit\n"))
+        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read post in detail\n8)Comment a post or another comment\n9) Update a comment\n10)Exit\n"))
 
         if (inp == 1):
 
@@ -208,6 +208,8 @@ def main(userName):
             post_id = int(input("Enter the post ID you want to comment on: "))
             comment.create_comment_prompt(post_id, user)
             readPost(post_id)
+        elif (inp == 9):
+            comment.update_comment_prompt(user)
         elif (inp == 10):
             break
         else:

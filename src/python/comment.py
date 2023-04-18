@@ -39,7 +39,7 @@ def delete_comment(comment_id):
 def read_comment(comment_id):
     connection = utils.create_connection()
     try:
-        with connection.cursor() as cursor:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.callproc("readComment", (comment_id,))
             result = cursor.fetchone()
             connection.commit()
@@ -97,3 +97,15 @@ def create_comment_prompt(post_id, user):
 
     create_comment(post_id, parent_id, user, text_body)
     print("Comment created successfully!")
+
+def update_comment_prompt(user):
+    comment_id = int(input("Enter the comment ID you want to update: "))
+    current_comment = read_comment(comment_id)
+    #if current_comment is not None and current_comment['userName'] == user:
+    if current_comment is not None and current_comment.get('userName') == user:
+
+        new_text_body = input("Enter the new text for the comment: ").strip()
+        update_comment(comment_id, new_text_body)
+        print("Comment updated successfully!")
+    else:
+        print("Invalid comment ID or you are not the author of this comment.")

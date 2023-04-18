@@ -173,3 +173,23 @@ BEGIN
 END //
 DELIMITER ;
 
+
+SELECT
+    p.id AS post_id,
+    p.title AS post_title,
+    p.body AS post_body,
+    c.id AS comment_id,
+    c.textBody AS comment_body,
+    c.parentId AS comment_parent_id
+FROM
+    post AS p
+JOIN
+    postHasCommentLink AS pcl
+ON
+    p.id = pcl.postId
+JOIN
+    `comment` AS c
+ON
+    pcl.commentId = c.id;
+
+
