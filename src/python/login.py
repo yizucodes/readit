@@ -31,7 +31,6 @@ def verify_credentials(username, password):
             password_to_check, hashed_password_bytes)
         # Error handling for hashed passwords
         if user and password_index is not None and is_correct_password:
-            currentUser = username
             return True
         else:
             return False
@@ -55,9 +54,11 @@ def login():
             password = input("Enter your password: ")
 
             if verify_credentials(username, password):
+                currentUser = username
+                
                 print("Login successful!")
                 # Go to the main page
-                post.main()
+                post.main(currentUser)
                 isLogged = True
                 break
             else:
