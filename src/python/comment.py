@@ -88,3 +88,12 @@ def print_comments(comments, parent_id=None, depth=0):
             print(" " * depth * 4, f"Comment: {comment['comment_text_body']}")
             print(" " * depth * 4, "----------------------------------------")
             print_comments(comments, comment['comment_id'], depth + 1)
+
+
+def create_comment_prompt(post_id, user):
+    parent_id = input("Enter the parent comment ID, or leave it blank if this is a top-level comment: ").strip()
+    parent_id = None if parent_id == '' else int(parent_id)
+    text_body = input("Enter the comment text: ").strip()
+
+    create_comment(post_id, parent_id, user, text_body)
+    print("Comment created successfully!")
