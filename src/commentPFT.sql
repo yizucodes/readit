@@ -33,11 +33,13 @@ BEGIN
             END IF;
 
             -- Insert the comment with the provided parent ID
-            INSERT INTO `comment` (textBody, parentId) VALUES (text_body, parent_id);
+            INSERT INTO `comment` (textBody, parentId, userName) VALUES (text_body, parent_id, userName);
+
 
         ELSE
             -- Insert the comment as a top-level comment
-            INSERT INTO `comment` (textBody, parentId) VALUES (text_body, NULL);
+            INSERT INTO `comment` (textBody, parentId, userName) VALUES (text_body, NULL, userName);
+
         END IF;
 
         -- Get the ID of the inserted comment
@@ -105,8 +107,6 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL deleteComment(16);
-
 
 -- Testing 
 
@@ -131,7 +131,6 @@ ON
 
 
 
--- Drop the procedure if it already exists
 DROP PROCEDURE IF EXISTS readComment;
 
 DELIMITER //
