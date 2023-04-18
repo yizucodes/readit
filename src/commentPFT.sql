@@ -148,24 +148,25 @@ BEGIN
         -- Signal an error if the comment doesn't exist
         SIGNAL SQLSTATE '45000' SET message_text = 'Comment does not exist with that ID.';
     ELSE
-        -- Fetch the comment along with the associated post information
+        -- Fetch the comment along with the associated post information and user information
         SELECT
             c.id AS comment_id,
             c.textBody AS comment_text_body,
             c.parentId AS comment_parent_id,
             p.id AS post_id,
             p.title AS post_title,
-            p.body AS post_body
+            p.body AS post_body,
+            u.userName AS user_name
         FROM
             comment AS c
         JOIN
-            postHasCommentLink AS pcl
-        ON
-            c.id = pcl.commentId
-        JOIN
             post AS p
         ON
-            pcl.postId = p.id
+            c.postId = p.id
+        JOIN
+            user AS u
+        ON
+            c.userName = u.userName
         WHERE
             c.id = comment_id;
     END IF;
