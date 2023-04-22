@@ -77,7 +77,10 @@ IF postId IS NULL THEN SIGNAL sqlstate '45000' SET message_text = "post ID canno
 END IF;
 
 IF img IS NOT NULL THEN 
-SELECT url INTO existing FROM image WHERE image.url = url;
+-- SELECT url INTO existing FROM image WHERE image.url = url;
+
+SELECT url INTO existing FROM image WHERE image.url = img;
+
 IF existing IS NULL 
 	THEN
     CALL create_img(img, postId);
