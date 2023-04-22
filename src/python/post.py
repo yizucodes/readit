@@ -196,6 +196,7 @@ def main(userName):
             print("\nChecking if the vote is valid.....\n")
             try:
                 upvote(user, vote)
+                print(f"\nVoted successfully for post with id {vote}")
             except:
                 print("\nAlready upvoted the post...cannot upvote again!...\n")
         elif (inp == 6):
