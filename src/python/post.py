@@ -187,6 +187,7 @@ def main(userName):
                 "\nWhich post do you want to delete? Note: you can only delete your posts!\n"))
             try:
                 delete_post(dele, user)
+                print(f"Deleted post with id {dele} successfully!")
             except:
                 print("\nInvalid delete attempt!\n")
                 continue
