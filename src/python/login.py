@@ -5,6 +5,8 @@ import utils
 
 currentUser = None
 
+conn = utils.create_connection()
+user.connection = conn
 
 def get_password_column_index(cursor):
     for index, column_info in enumerate(cursor.description):
@@ -14,7 +16,7 @@ def get_password_column_index(cursor):
 
 
 def verify_credentials(username, password):
-    conn = utils.create_connection()
+    
     cursor = conn.cursor()
 
     try:
@@ -38,9 +40,11 @@ def verify_credentials(username, password):
             return True
         else:
             return False
+    except:
+        print("Validation Error")
     finally:
         cursor.close()
-        conn.close()
+   
 
 
 def login():
@@ -71,6 +75,8 @@ def login():
         elif choice == '2':
             user.create_user()
         elif choice == '3':
+            
+            conn.close()
             break
         else:
             print("Invalid choice. Please try again.")

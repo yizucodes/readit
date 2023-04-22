@@ -2,10 +2,14 @@ import utils
 import login
 import comment
 import pymysql
+import user as UserObject
+import logout
 
 from image import image
 
-mydb = utils.create_connection()
+mydb = login.conn
+
+
 
 cursor = mydb.cursor()
 post_id_list = []
@@ -107,7 +111,7 @@ def main(userName):
     # print("user: ", user)
 
     while (True):
-        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read/Comment post(Give post ID to continue!)\n10)Exit\n"))
+        inp = int(input("\n1) Create a post \n2) Display all the posts\n3)Update a post\n4)Delete Post\n5)Upvote a post\n6)Undo your vote\n7)Read/Comment post(Give post ID to continue!)\n8)My Profile\n10)Logout\n"))
 
         if (inp == 1):
 
@@ -215,13 +219,37 @@ def main(userName):
                         readPost(post_id)
                     elif (com_opt == 2):
                         comment.update_comment_prompt(user)
+                        readPost(post)
                     elif (com_opt == 5):
                         break
                 except Exception as e:
                     print(f"\nInvalid Option, {e}\n")
                     break
 
+        elif (inp == 8):
+            try:
+                while(True):
+                    UserObject.get_user(user)
+                    
+                    pro = int(input("1)Update Profile   2)Delete account!  3)Go Back to posts!"))
+
+                    if (pro == 1):
+                        UserObject.update_user_interactive()
+                    elif (pro == 2):
+                        res = UserObject.delete_user_interactive(user)
+                        if(res == 1) :
+                            logout.logout(mydb)
+                            return
+                    elif (pro == 3):
+                        break
+                    else: 
+                        print("Invalid choice entered")
+            except Exception as e:
+                print(f"Couldn't access the user. Got this error: {e}")
+
         elif (inp == 10):
+            print("heere logout")
+            logout.logout(mydb)
             break
         else:
             print("\nInvalid Option selected!\n")

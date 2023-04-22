@@ -2,10 +2,13 @@ import pymysql
 import re
 import json
 import bcrypt
+import logout
+
 
 # TODO: Get the current username that is logged in VIA GLOBAL VARIABLE
 # Check when deleting non-existing user
 from datetime import datetime
+connection = None
 
 # Utils
 def is_valid_date(date_string, date_format="%Y-%m-%d"):
@@ -36,13 +39,6 @@ def load_config():
 config = load_config()
 
 # Create a connection to the MySQL database
-def create_connection():
-    return pymysql.connect(
-        host=config["database"]["host"],
-        user=config["database"]["user"],
-        password=config["database"]["password"],
-        database=config["database"]["database_name"]
-    )
 
 
 def create_user_input(username, first_name, last_name, password, email, date_of_birth, about):
@@ -52,7 +48,10 @@ def create_user_input(username, first_name, last_name, password, email, date_of_
     hashed_password = bcrypt.hashpw(password_bytes, salt)
 
     # Connect to the MySQL database
-    connection = create_connection()
+    # connection = create_connection()
+    if connection == None:
+        print("Connection Error!")
+        return
 
     try:
         with connection.cursor() as cursor:
@@ -64,8 +63,7 @@ def create_user_input(username, first_name, last_name, password, email, date_of_
         connection.commit()
     except pymysql.err.InternalError as e:
         print("Error:", e)
-    finally:
-        connection.close()
+    
 
 
 def create_user():
@@ -94,56 +92,60 @@ def create_user():
             print(f"Error creating user: {e}")
 
 
-def get_user():
+def get_user(username):
     # Connect to the MySQL database
-    connection = create_connection()
+    if connection == None:
+        print("Connection Error!")
+        return
+
     cur = connection.cursor()
 
-    while True:
+ 
 
         # Current implementation requires currently logged in user to input his user name to read his details
-        username_Input = username = input("Enter username that you want to read info about (type 'exit' to quit): ")
+        
 
-        try:
-            if username_Input.lower() == 'exit':
-                break
-            
-             # Call the stored procedure to retrieve user details
-            cur.callproc('getUserDetails', [username_Input])
+    try:
+        
+        
+            # Call the stored procedure to retrieve user details
+        cur.callproc('getUserDetails', [username])
 
-            # Get the result set from the stored procedure
-            resUser = cur.fetchone()
+        # Get the result set from the stored procedure
+        resUser = cur.fetchone()
 
-            # Print the user details
-            username = resUser[get_column_index(cur, "username")]
-            first_name = username = resUser[get_column_index(cur, "firstName")]
-            last_name = resUser[get_column_index(cur, "lastName")]
-            email = resUser[get_column_index(cur, "email")]
-            date_of_birth = resUser[get_column_index(cur, "dateOfBirth")]
-            about = resUser[get_column_index(cur, "about")]
-            num_posts = resUser[get_column_index(cur, "numPosts")]
-            time_joined = resUser[get_column_index(cur, "timeJoined")]
+        # Print the user details
+        username = resUser[get_column_index(cur, "username")]
+        first_name = resUser[get_column_index(cur, "firstName")]
+        last_name = resUser[get_column_index(cur, "lastName")]
+        email = resUser[get_column_index(cur, "email")]
+        date_of_birth = resUser[get_column_index(cur, "dateOfBirth")]
+        about = resUser[get_column_index(cur, "about")]
+        num_posts = resUser[get_column_index(cur, "numPosts")]
+        time_joined = resUser[get_column_index(cur, "timeJoined")]
 
-            print("Username:", username)
-            print("First Name:", first_name)
-            print("Last Name:", last_name)
-            print("Email:", email)
-            print("Date of Birth:", date_of_birth)
-            print("About:", about)
-            print("Number of Posts:", num_posts)
-            print("Time Joined:", time_joined)
+        print("Username:", username)
+        print("First Name:", first_name)
+        print("Last Name:", last_name)
+        print("Email:", email)
+        print("Date of Birth:", date_of_birth)
+        print("About:", about)
+        print("Number of Posts:", num_posts)
+        print("Time Joined:", time_joined)
 
-        except Exception as e:
-            print(f"Error retrieving user: {e}")
+    except Exception as e:
+        print(f"Error retrieving user: {e}")
+        
+    
+    
 
-        finally:
-            cur.close()
-            connection.close()
 
 # kwargs is short for "keyword arguments."
 # Pass a variable number of named or keyword arguments to a function
 def update_user(username, **kwargs):
-    connection = create_connection()
+    if connection == None:
+        print("Connection Error!")
+        return
     
     new_username = kwargs.get('new_username', None)
     new_first_name = kwargs.get('new_first_name', None)
@@ -153,6 +155,7 @@ def update_user(username, **kwargs):
     new_date_of_birth = kwargs.get('new_date_of_birth', None)
     new_about = kwargs.get('new_about', None)
 
+    print("----------", new_first_name)
     try:
         with connection.cursor() as cursor:
             cursor.callproc('updateUser', (username, new_username, new_first_name, new_last_name,
@@ -161,8 +164,7 @@ def update_user(username, **kwargs):
             print("User updated successfully.")
     except pymysql.err.InternalError as e:
         print("Error:", e)
-    finally:
-        connection.close()
+    
 
 def update_user_interactive():
 
@@ -227,30 +229,33 @@ def update_user_interactive():
     update_user(username, **update_fields)
 
 
-def delete_user_interactive():
-    while True:
-        username = input("Enter username of user to delete (type 'exit' to quit): ")
-        if username.lower() == 'exit':
-            break
+def delete_user_interactive(user):
+    
+    username = user
+    
+    confirmation = input(f"Are you sure you want to delete user {username}? (yes/no): ")
+    if confirmation.lower() == 'yes':
+        if connection == None:
+            print("Connection Error!")
+            return 0
+        try:
+            with connection.cursor() as cursor:
+                cursor.callproc('delete_user', [username])
+                connection.commit()
+                print("User deleted successfully.")
+                return 1
+
+                
+                
+        except:
+            print("Error in deletion")
         
-        confirmation = input(f"Are you sure you want to delete user {username}? (yes/no): ")
-        if confirmation.lower() == 'yes':
-            connection = create_connection()
-            try:
-                with connection.cursor() as cursor:
-                    cursor.callproc('delete_user', [username])
-                    connection.commit()
-                    print("User deleted successfully.")
-            except:
-                print("Error in deletion")
-            finally:
-                connection.close()
-        else:
-            print("User deletion canceled.")
+    else:
+        print("User deletion canceled.")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # Call the update_user_interactive function to start the update process
     # update_user_interactive()
-    delete_user_interactive()
+    # delete_user_interactive()
     
