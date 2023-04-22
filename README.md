@@ -40,7 +40,8 @@ CS5200 Final Project
   - Create comment and subcomment - DONE
   - Read thread of comment of a post  - DONE
   - Update one comment 
-  - Delete - TO DO --> Changed --> only deleting post can delete comments
+  - Delete - TO DO --> Changed 
+      -- only deleting post can delete comments
     - Delete the top-level comment, child comments get deleted
     - Deleting sub-comment, only sub-comment gets deleted
 
