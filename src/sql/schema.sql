@@ -48,19 +48,6 @@ CREATE TABLE IF NOT EXISTS `postContainsImageLink` (
 	primary key (url, postId)
 );
 
-CREATE TABLE IF NOT EXISTS `awardType` (
-	`name` VARCHAR(200) PRIMARY KEY,
-    weight INT NOT NULL 
-);
-
-CREATE TABLE IF NOT EXISTS `award` (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-    imageUrl varchar(255) NOT NULL,
-    userName varchar(255) NOT NULL,
-    awardName VARCHAR(200),
-    FOREIGN KEY (userName) REFERENCES `user` (userName) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`awardName`) REFERENCES `awardType` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-);
 CREATE TABLE IF NOT EXISTS `comment` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     textBody VARCHAR(2000),
@@ -81,10 +68,4 @@ CREATE TABLE IF NOT EXISTS `postHasCommentLink` (
     primary key (commentId, postId)
 );
 
-CREATE TABLE IF NOT EXISTS `awardToPostLink` (	
-    postId INT NOT NULL,
-    awardId INT NOT NULL,
-    FOREIGN KEY (`postId`) REFERENCES `post` (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`awardId`) REFERENCES `award` (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    primary key (postId, awardId)
-);
+

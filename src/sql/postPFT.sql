@@ -34,7 +34,7 @@ BEGIN
 			-- Update the post
             
             IF `body` IS NULL
-				THEN 
+				THEN
                 SELECT post.body INTO current_body FROM post WHERE post.id = id;
 			ELSE
 				SELECT body INTO current_body;
