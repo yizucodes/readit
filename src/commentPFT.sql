@@ -136,7 +136,8 @@ DROP PROCEDURE IF EXISTS readComment;
 DELIMITER //
 CREATE PROCEDURE readComment
 (
-    IN comment_id INT
+    IN comment_id INT,
+    IN UserName VARCHAR(255)
 )
 BEGIN
     -- Check if the comment exists
@@ -149,46 +150,31 @@ BEGIN
     ELSE
         -- Fetch the comment along with the associated post information and user information
         SELECT
-            c.id AS comment_id,
-            c.textBody AS comment_text_body,
-            c.parentId AS comment_parent_id,
-            p.id AS post_id,
-            p.title AS post_title,
-            p.body AS post_body,
-            u.userName AS user_name
-        FROM
-            comment AS c
-        JOIN
-            post AS p
-        ON
-            c.postId = p.id
-        JOIN
-            user AS u
-        ON
-            c.userName = u.userName
-        WHERE
-            c.id = comment_id;
+			c.id AS comment_id_c,
+			c.textBody AS comment_text_body,
+			c.parentId AS comment_parent_id,
+			p.id AS post_id,
+			p.title AS post_title,
+			p.body AS post_body
+	FROM
+		post AS p
+	JOIN
+		postHasCommentLink AS pcl
+	ON
+		p.id = pcl.postId
+	JOIN
+		`comment` AS c
+	ON
+		pcl.commentId = c.id
+	where c.id = comment_id
+	and 
+	c.userName = UserName;
     END IF;
 END //
 DELIMITER ;
 
+call  readComment(6);
 
-SELECT
-    p.id AS post_id,
-    p.title AS post_title,
-    p.body AS post_body,
-    c.id AS comment_id,
-    c.textBody AS comment_body,
-    c.parentId AS comment_parent_id
-FROM
-    post AS p
-JOIN
-    postHasCommentLink AS pcl
-ON
-    p.id = pcl.postId
-JOIN
-    `comment` AS c
-ON
-    pcl.commentId = c.id;
+
 
 
