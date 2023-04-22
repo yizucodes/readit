@@ -173,8 +173,4 @@ BEGIN
 END //
 DELIMITER ;
 
-call  readComment(6);
-
-
-
 
