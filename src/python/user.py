@@ -3,6 +3,7 @@ import re
 import json
 import bcrypt
 import logout
+import post
 
 
 # TODO: Get the current username that is logged in VIA GLOBAL VARIABLE
@@ -183,6 +184,7 @@ def update_user_interactive():
         print("5. Email")
         print("6. Date of Birth")
         print("7. About")
+        print("8. Go to mainpage")
         
         choice = int(input("Enter the number corresponding to the field you want to update: "))
         
@@ -219,6 +221,8 @@ def update_user_interactive():
         elif choice == 7:
             new_about = input("Enter new about: ").strip()
             update_fields['new_about'] = new_about
+        elif choice == 8:
+            post.main()
         else:
             print("Invalid choice. Please try again.")
             continue
