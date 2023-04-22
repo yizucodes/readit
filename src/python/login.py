@@ -60,7 +60,6 @@ def login():
         if choice == '1':
             username = input("Enter your username: ")
             password = input("Enter your password: ")
-            print(username, password)
 
             if verify_credentials(username, password):
                 currentUser = username
