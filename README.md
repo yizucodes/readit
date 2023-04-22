@@ -4,7 +4,7 @@ CS5200 Final Project
 
 # How To Run
 
-1. Change `user` and `password` field based on your MySQL credentials in `config.json` file
+- Change `user` and `password` field based on your MySQL credentials in `config.json` file
 
 ```
         "user": "",
@@ -12,44 +12,52 @@ CS5200 Final Project
 
 ```
 
-# TODO
+- Go the terminal and go to the python directory.
+- On terminal type "python login.py" to run the login python script. -- That is the start point of our application.
+- Create a new user by following the instructions.
+- Login using the newly created user.
+- You will see the main post page with different operations listed.
+- To create a post Click on create post and follow the instructions.
+- To delete the post, come back to the main page and select on delete the post.
+- To upvote a post, you select upvote and vote it. You can also remove your vote from the main page itself.
+- To comment on the post, go to Read/Comment option and comment then you have three options, 1.Create Comment 2.Update a comment
+  - According to our design decision, a comment can only be deleted when a post is deleted. This would make people comment only when they mean to say something important.
+- To Check the user profile, select the option.
+  - Now you should see options to delete and update the user profile.
+- Finally to log out you have option 10 that closes all the cursors and connections and loggs the user out of both the database and the applicaiton.
+
+# Everything that we have done:
 
 - Showing profile page
 
-- Hashing and storing password - DONE
+- Hashing and storing password
 
 - CRUD User
 
-  - Create - Done
-  - Read profile page - DONE
+  - Create
+  - Read profile page
     - Function to return one profile based on userName
-  - Update any fields of user - Done
+  - Update any fields of user
     - Procedure
-  - Delete user --> user can delete itself - DONE
+  - Delete user --> user can delete itself
     - Procedure
 
 - CRUD Post
 
-  - Create Post --x
+  - Create Post
   - Read post
-  - Update post --X
-  - Update IS ONLY increasing or decreasing Vote --X
+  - Update post
+  - Update IS ONLY increasing or decreasing Vote
   - Delete post will delete its comments
 
 - CRUD Comment
-  - Create comment and subcomment - DONE
-  - Read thread of comment of a post  - DONE
-  - Update one comment 
-  - Delete - TO DO --> Changed 
-      -- only deleting post can delete comments
+  - Create comment and subcomment
+  - Read thread of comment of a post
+  - Update one comment
+  - Delete - TO DO --> Changed
+    -- only deleting post can delete comments
     - Delete the top-level comment, child comments get deleted
     - Deleting sub-comment, only sub-comment gets deleted
-
-# Maybe - TBD
-
-- Award
-  - Trigger to increase or decrease numAwardsReceived based posts
-  - When post gets awarded by user
 
 # Changes
 
@@ -62,6 +70,6 @@ After successful user creation, user is prompted back to screen asking for login
 - Login with hashed password
 - Recursive relationship of comment --> Overly complicated translations from user operations to database operations
 - CRUD for 3 entities
-    - User
-    - Post
-    - Comment
+  - User
+  - Post
+  - Comment
