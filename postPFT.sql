@@ -65,6 +65,40 @@ BEGIN
 END // 
 DELIMITER ;
 
+USE readit;
+
+-- The procedure is responsible for updating an existing post.
+DROP PROCEDURE IF EXISTS UpdatePost;
+
+DELIMITER //
+CREATE PROCEDURE UpdatePost(
+IN id INT,
+IN userName VARCHAR(255),
+IN title VARCHAR(255),
+IN body TEXT
+)
+BEGIN
+    IF id IS NULL THEN SIGNAL sqlstate '45000' SET message_text = "Post ID cannot be null";
+    END IF;
+
+    IF userName IS NULL THEN SIGNAL sqlstate '45000' SET message_text = "Username cannot be null";
+    END IF;
+
+    IF (SELECT post.userName FROM post WHERE post.id = id) != userName THEN
+        SIGNAL sqlstate '45000' SET message_text = "You can only edit your own post!";
+    END IF;
+
+    UPDATE post
+    --  To update the title and body of the post only if the new values provided are not null
+    SET
+        title = COALESCE(title, post.title),
+        body = COALESCE(body, post.body),
+        updatedTime = NOW()
+    WHERE post.id = id;
+END //
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS user_votes_post;
 
 DELIMITER // 
