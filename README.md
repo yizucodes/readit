@@ -2,6 +2,9 @@
 
 CS5200 Final Project
 
+# Demo Video
+[Video Link](https://www.loom.com/share/48db54bd1bb04e7d92ba0ce0c1b474b4)
+
 # How To Run
 
 - Change `user` and `password` field based on your MySQL credentials in `config.json` file
