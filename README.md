@@ -68,11 +68,3 @@ After successful user creation, user is prompted back to screen asking for login
 
 - In activity diagram, after successful signup, user goes directly to home page with newly signed up user name
 
-# Extra Credit
-
-- Login with hashed password
-- Recursive relationship of comment --> Overly complicated translations from user operations to database operations
-- CRUD for 3 entities
-  - User
-  - Post
-  - Comment
